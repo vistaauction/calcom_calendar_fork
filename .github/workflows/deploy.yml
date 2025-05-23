@@ -51,7 +51,6 @@ jobs:
           CALENDSO_ENCRYPTION_KEY=${{ secrets.CALENDSO_ENCRYPTION_KEY }}
           NEXT_PUBLIC_SENDGRID_SENDER_NAME=Appointments at Vista Auction
           CALCOM_TELEMETRY_DISABLED=1
-          NODE_ENV=production
           NODE_OPTIONS=--max_old_space_size=16384
           SENDGRID_EMAIL=${{ secrets.SENDGRID_EMAIL }}
           EMAIL_SERVER_HOST=smtp.sendgrid.net
@@ -60,6 +59,7 @@ jobs:
           EMAIL_SERVER_PASSWORD=${{ secrets.SENDGRID_API_KEY }}
           EMAIL_FROM=${{ secrets.SENDGRID_EMAIL }}
           EMAIL_FROM_NAME=Vista Auction Appointments
+          NODE_ENV=production
           EOF
 
           echo 'ALLOWED_HOSTNAMES="\"https://${{ secrets.DOMAIN_NAME }}\""' >> .env
