@@ -26,6 +26,9 @@ jobs:
         run: |
           ssh ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }} << 'EOF'
             set -e
+            mkdir -p ~/.ssh
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+
             cd ~
             rm -rf calcom_calendar
             git clone git@github.com:vistaauction/calcom_calendar.git
