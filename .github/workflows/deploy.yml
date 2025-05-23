@@ -22,43 +22,53 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.GCP_VM_IP }} >> ~/.ssh/known_hosts
 
-      - name: Create .env and copy to VM
-        run: |
-          echo "POSTGRES_DB=calcom" > .env
-          echo "POSTGRES_USER=caluser" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-          echo "DATABASE_URL=postgresql://caluser:${{ secrets.POSTGRES_PASSWORD }}@database:5432/calcom" >> .env
-          echo "NEXT_PUBLIC_WEBAPP_URL=http://${{ secrets.GCP_VM_IP }}:3000" >> .env
-          echo "..." >> .env
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa .env ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }}:/home/${{ secrets.GCP_VM_USER }}/calcom_calendar/.env
-
-      - name: Deploy and build calendar on GCP VM
+      - name: Clone calcom_calendar on VM
         run: |
           ssh ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }} << 'EOF'
             set -e
-
             cd ~
             rm -rf calcom_calendar
-            git clone https://github.com/vistaauction/calcom_calendar_fork.git calcom_calendar
+            git clone https://github.com/vistaauction/calcom_calendar.git calcom_calendar
             cd calcom_calendar
             git submodule update --remote --init
+          EOF
 
-            docker compose down || true
+      - name: Create and upload .env file
+        run: |
+          cat > .env <<EOF
+          POSTGRES_DB=calcom
+          POSTGRES_USER=caluser
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+
+          DATABASE_HOST=database:5432
+          DATABASE_URL=postgresql://caluser:${{ secrets.POSTGRES_PASSWORD }}@database:5432/calcom
+          DATABASE_DIRECT_URL=postgresql://caluser:${{ secrets.POSTGRES_PASSWORD }}@database:5432/calcom
+
+          NEXT_PUBLIC_WEBAPP_URL=http://${{ secrets.GCP_VM_IP }}:3000
+          NEXT_PUBLIC_API_V2_URL=http://${{ secrets.GCP_VM_IP }}:3000/api/v2
+
+          NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+          CALENDSO_ENCRYPTION_KEY=${{ secrets.CALENDSO_ENCRYPTION_KEY }}
+
+          SENDGRID_EMAIL=${{ secrets.SENDGRID_EMAIL }}
+          SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}
+          NEXT_PUBLIC_SENDGRID_SENDER_NAME=Appointments at Vista Auction
+          EMAIL_FROM_NAME='VistaAuction'
+          EMAIL_FROM=${{ secrets.SENDGRID_EMAIL }}
+
+          CALCOM_TELEMETRY_DISABLED=1
+          NODE_ENV=production
+          NODE_OPTIONS=--max_old_space_size=16384
+          EOF
+
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa .env ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }}:/home/${{ secrets.GCP_VM_USER }}/calcom_calendar/.env
+
+      - name: Run Docker Compose on VM
+        run: |
+          ssh ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }} << 'EOF'
+            set -e
+            cd ~/calcom_calendar
             docker compose up -d database
-            sleep 10
-
-            DOCKER_BUILDKIT=0 docker compose build \
-              --build-arg NEXT_PUBLIC_WEBAPP_URL=http://${{ secrets.GCP_VM_IP }}:3000 \
-              --build-arg NEXT_PUBLIC_API_V2_URL=http://${{ secrets.GCP_VM_IP }}:3000/api/v2 \
-              --build-arg NEXT_PUBLIC_LICENSE_CONSENT=true \
-              --build-arg CALCOM_TELEMETRY_DISABLED=1 \
-              --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
-              --build-arg CALENDSO_ENCRYPTION_KEY=${{ secrets.CALENDSO_ENCRYPTION_KEY }} \
-              --build-arg DATABASE_URL=postgresql://caluser:${{ secrets.POSTGRES_PASSWORD }}@database:5432/calcom \
-              --build-arg POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-              --build-arg MAX_OLD_SPACE_SIZE=16384 \
-              calcom
-
+            DOCKER_BUILDKIT=0 docker compose build calcom
             docker compose up -d calcom
-            docker compose ps
           EOF
