@@ -59,7 +59,7 @@ jobs:
           NODE_OPTIONS=--max_old_space_size=16384
           EOF
 
-          echo "ALLOWED_HOSTNAMES=[\"${{ secrets.DOMAIN_NAME }}\"]" >> .env
+          echo "ALLOWED_HOSTNAMES=[\"${{ secrets.ALLOWED_HOSTNAME }}\"]" >> .env
 
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa .env ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }}:/home/${{ secrets.GCP_VM_USER }}/calcom_calendar_fork/.env
 
