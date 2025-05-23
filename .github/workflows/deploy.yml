@@ -28,7 +28,7 @@ jobs:
             set -e
             cd ~
             rm -rf calcom_calendar
-            git clone https://github.com/vistaauction/calcom_calendar.git calcom_calendar
+            git clone git@github.com:vistaauction/calcom_calendar.git
             cd calcom_calendar
             git submodule update --remote --init
           EOF
