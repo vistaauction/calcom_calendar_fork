@@ -47,7 +47,7 @@ jobs:
           DATABASE_DIRECT_URL=postgresql://caluser:${{ secrets.POSTGRES_PASSWORD }}@database:5432/calcom
           NEXT_PUBLIC_WEBAPP_URL=https://${{ secrets.DOMAIN_NAME }}
           NEXT_PUBLIC_API_V2_URL=https://${{ secrets.DOMAIN_NAME }}/api/v2
-          ALLOWED_HOSTNAMES="[\"${{ secrets.DOMAIN_NAME }}\"]"
+          ALLOWED_HOSTNAMES="\"appointments.vistaapp.tech\""
           NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
           CALENDSO_ENCRYPTION_KEY=${{ secrets.CALENDSO_ENCRYPTION_KEY }}
           SENDGRID_EMAIL=${{ secrets.SENDGRID_EMAIL }}
