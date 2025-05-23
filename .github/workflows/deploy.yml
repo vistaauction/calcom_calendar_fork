@@ -31,7 +31,7 @@ jobs:
 
             cd ~
             rm -rf calcom_calendar
-            git clone https://${{ secrets.GH_TOKEN }}@github.com/vistaauction/calcom_calendar.git
+            git clone https://${{ secrets.GH_TOKEN }}@github.com/vistaauction/calcom_calendar_fork.git
             cd calcom_calendar
             git submodule update --remote --init
           EOF
