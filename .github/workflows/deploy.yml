@@ -59,9 +59,6 @@ jobs:
           EMAIL_SERVER_PASSWORD=${{ secrets.SENDGRID_API_KEY }}
           EMAIL_FROM=${{ secrets.SENDGRID_EMAIL }}
           EMAIL_FROM_NAME=Vista Auction Appointments
-          CALCOM_LICENSE_KEY=${{ secrets.CALCOM_LICENSE_KEY }}
-          CAL_SIGNATURE_TOKEN=${{ secrets.CAL_SIGNATURE_TOKEN }}
-          CALCOM_PRIVATE_API_ROUTE_KEY=${{ secrets.CALCOM_PRIVATE_API_ROUTE_KEY }}
           NODE_ENV=production
           EOF
 
