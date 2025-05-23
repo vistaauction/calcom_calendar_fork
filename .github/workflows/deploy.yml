@@ -63,8 +63,6 @@ jobs:
           EOF
 
           echo 'ALLOWED_HOSTNAMES="\"https://${{ secrets.DOMAIN_NAME }}\""' >> .env
-
-
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa .env ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }}:/home/${{ secrets.GCP_VM_USER }}/calcom_calendar_fork/.env
 
       - name: Run Docker Compose on VM
