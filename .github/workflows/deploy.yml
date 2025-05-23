@@ -41,8 +41,8 @@ jobs:
           cat > .env <<EOF
           POSTGRES_DB=calcom
           POSTGRES_USER=caluser
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           DATABASE_HOST=database:5432
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           DATABASE_URL=postgresql://caluser:${{ secrets.POSTGRES_PASSWORD }}@database:5432/calcom
           DATABASE_DIRECT_URL=postgresql://caluser:${{ secrets.POSTGRES_PASSWORD }}@database:5432/calcom
           NEXT_PUBLIC_WEBAPP_URL=https://${{ secrets.DOMAIN_NAME }}
