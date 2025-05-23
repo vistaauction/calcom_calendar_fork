@@ -32,7 +32,6 @@ jobs:
             cd ~
             rm -rf calcom_calendar
             git clone https://${{ secrets.GH_TOKEN }}@github.com/vistaauction/calcom_calendar_fork.git
-            cd calcom_calendar
             git submodule update --remote --init
           EOF
 
@@ -64,13 +63,12 @@ jobs:
           NODE_OPTIONS=--max_old_space_size=16384
           EOF
 
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa .env ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }}:/home/${{ secrets.GCP_VM_USER }}/calcom_calendar/.env
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa .env ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }}:/home/${{ secrets.GCP_VM_USER }}/.env
 
       - name: Run Docker Compose on VM
         run: |
           ssh ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }} << 'EOF'
             set -e
-            cd ~/calcom_calendar
             docker compose up -d database
             DOCKER_BUILDKIT=0 docker compose build calcom
             docker compose up -d calcom
