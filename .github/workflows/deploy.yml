@@ -59,7 +59,6 @@ jobs:
           EMAIL_SERVER_PASSWORD=${{ secrets.SENDGRID_API_KEY }}
           EMAIL_FROM=${{ secrets.SENDGRID_EMAIL }}
           EMAIL_FROM_NAME=Vista Auction Appointments
-          ALLOWED_HOSTNAMES='"vistaapp.tech"'
           NODE_ENV=production
           EOF
 
