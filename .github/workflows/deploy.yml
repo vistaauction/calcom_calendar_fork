@@ -22,6 +22,16 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.GCP_VM_IP }} >> ~/.ssh/known_hosts
 
+      - name: Create .env and copy to VM
+        run: |
+          echo "POSTGRES_DB=calcom" > .env
+          echo "POSTGRES_USER=caluser" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "DATABASE_URL=postgresql://caluser:${{ secrets.POSTGRES_PASSWORD }}@database:5432/calcom" >> .env
+          echo "NEXT_PUBLIC_WEBAPP_URL=http://${{ secrets.GCP_VM_IP }}:3000" >> .env
+          echo "..." >> .env
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa .env ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }}:/home/${{ secrets.GCP_VM_USER }}/calcom_calendar/.env
+
       - name: Deploy and build calendar on GCP VM
         run: |
           ssh ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_IP }} << 'EOF'
