@@ -15,12 +15,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up SSH access
+      - name: Set up SSH access (debug)
+        env:
+          GCP_VM_IP: ${{ secrets.GCP_VM_IP }}
         run: |
+          set -x                 
           mkdir -p ~/.ssh
           echo "${{ secrets.GCP_VM_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.GCP_VM_IP }} >> ~/.ssh/known_hosts
+
+          echo ">> GCP_VM_IP is: '$GCP_VM_IP'"
+
+          ssh-keyscan -H "$GCP_VM_IP" >> ~/.ssh/known_hosts 2>&1 \
+            || echo "Warning: ssh-keyscan failed with exit code $?"
 
       - name: Clone calcom_calendar on VM
         run: |
