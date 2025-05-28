@@ -1,8 +1,5 @@
 # Use postgres/example user/password credentials
 
-volumes:
-  database-data:
-
 networks:
   stack:
     name: stack
@@ -14,7 +11,7 @@ services:
     image: postgres
     restart: always
     volumes:
-      - database-data:/var/lib/postgresql/data/
+      - /mnt/db-data/postgres-data:/var/lib/postgresql/data
     env_file: .env
     networks:
       - stack
@@ -46,7 +43,7 @@ services:
     depends_on:
       - database
 
-# Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
+  # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
   studio:
     image: calcom.docker.scarf.sh/calcom/cal.com
     restart: always
