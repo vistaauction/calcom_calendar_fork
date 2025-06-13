@@ -30,6 +30,9 @@ services:
         CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
         DATABASE_URL: ${DATABASE_URL}
         DATABASE_DIRECT_URL: ${DATABASE_URL}
+        TWILIO_SID: ${TWILIO_SID}
+        TWILIO_TOKEN: ${TWILIO_TOKEN}
+        TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER}
       network: stack
     restart: always
     networks:
