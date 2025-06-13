@@ -69,6 +69,7 @@ jobs:
           TWILIO_SID=${{ secrets.TWILIO_SID }}
           TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }}
           TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }}
+          TWILIO_MESSAGING_SID=${{ secrets.TWILIO_MESSAGING_SID }}
           NEXT_PUBLIC_SENDER_ID=${{ secrets.NEXT_PUBLIC_SENDER_ID }}
           CALCOM_LICENSE_KEY=${{ secrets.CALCOM_LICENSE_KEY }}
           CAL_SIGNATURE_TOKEN=${{ secrets.CAL_SIGNATURE_TOKEN }}
